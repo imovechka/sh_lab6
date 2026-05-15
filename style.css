@@ -1,9 +1,9 @@
 :root {
-  --bg: #fafafa;
-  --fg: #111;
+  --bg: #ffffff;
+  --fg: #0a0a0a;
   --muted: #666;
-  --accent: #0066ff;
-  --border: #e5e5e5;
+  --accent: #059669; 
+  --border: #d4d4d4;
 }
 
 [data-theme='dark'] {
