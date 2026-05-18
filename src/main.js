@@ -1,16 +1,17 @@
 import '../style.css';
 
-// Scatter-анимация для заголовков секций
+// Scatter-анимация для заголовков — лёгкий разброс, текст остаётся читаемым
 document.querySelectorAll('.scatter-heading').forEach(heading => {
   const text = heading.textContent;
   heading.innerHTML = text
     .split('')
     .map(char => {
-      if (char === ' ') return ' ';
-      const tx = (Math.random() - 0.5) * 120; // -60px до +60px по X
-      const ty = (Math.random() - 0.5) * 80;  // -40px до +40px по Y
-      const tr = (Math.random() - 0.5) * 60;  // -30deg до +30deg поворот
-      return `<span class="h-letter" style="--tx:${tx.toFixed(1)}px; --ty:${ty.toFixed(1)}px; --tr:${tr.toFixed(1)}deg">${char}</span>`;
+      if (char === ' ') return '&nbsp;';
+      // Маленький разброс: ±12px по X, ±8px по Y, ±10deg поворот
+      const tx = (Math.random() - 0.5) * 24;
+      const ty = (Math.random() - 0.5) * 16;
+      const tr = (Math.random() - 0.5) * 20;
+      return `<span class="h-letter" style="--tx:${tx.toFixed(1)}px;--ty:${ty.toFixed(1)}px;--tr:${tr.toFixed(1)}deg">${char}</span>`;
     })
     .join('');
 });
@@ -27,7 +28,7 @@ const facts = [
 
 let lastFactIndex = -1;
 
-const factBtn = document.getElementById('fact-btn');
+const factBtn    = document.getElementById('fact-btn');
 const randomFact = document.getElementById('random-fact');
 
 if (factBtn && randomFact) {
@@ -53,7 +54,7 @@ if (factBtn && randomFact) {
 
 // Переключение темы
 const themeToggle = document.getElementById('theme-toggle');
-const html = document.documentElement;
+const html        = document.documentElement;
 
 if (themeToggle) {
   themeToggle.addEventListener('click', () => {
