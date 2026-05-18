@@ -1,7 +1,7 @@
-/* 1. Шрифты */
+
 @font-face {
   font-family: 'Harlequinade';
-  src: url('./fonts/harlequinade-madness.ttf') format('truetype');
+  src: url('/fonts/harlequinade-madness.ttf') format('truetype'); /* слэш в начале! */
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -9,7 +9,7 @@
 
 @font-face {
   font-family: 'Earwig Factory';
-  src: url('./fonts/earwig-factory-rg.ttf') format('truetype');
+  src: url('/fonts/earwig-factory-rg.ttf') format('truetype'); /* слэш в начале! */
   font-weight: normal;
   font-style: normal;
   font-display: swap;
