@@ -71,3 +71,20 @@ if (themeToggle) {
   });
   html.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
 }
+// Копирование email
+const copyBtn = document.getElementById('copy-email');
+if (copyBtn) {
+  copyBtn.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText('sofiashnurenko@gmail.com');
+      copyBtn.classList.add('copied');
+      copyBtn.textContent = '✓';
+      setTimeout(() => {
+        copyBtn.classList.remove('copied');
+        copyBtn.textContent = '📋';
+      }, 1500);
+    } catch (err) {
+      console.error('Не удалось скопировать', err);
+    }
+  });
+}
