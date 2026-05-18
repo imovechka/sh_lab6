@@ -1,62 +1,81 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CV — Шнуренко София</title>
-    <link rel="stylesheet" href="./style.css" />
-  </head>
-  <body>
-    <main class="cv">
-      <header class="cv__header">
-        <h1>Шнуренко София</h1>
-        <p class="cv__tagline">
-          Я студентик первокурсник матобесик, 18 годиков.
-        </p>
-        <ul class="cv__contacts">
-          <li><a href="mailto:sofiashnurenko@gmail.com">sofiashnurenko@gmail.com</a></li>
-          <li><a href="https://github.com/imovechka">github.com/imovechka</a></li>
-        </ul>
+<body>
+  <main class="cv">
+    <header class="cv__header">
+      <!-- Имя с анимированными буквами -->
+      <h1 class="cv__name">
+        <span class="letter" style="--color: #ffb3ba; --delay: 0s">Ш</span>
+        <span class="letter" style="--color: #bae1ff; --delay: 0.1s">н</span>
+        <span class="letter" style="--color: #baffc9; --delay: 0.2s">у</span>
+        <span class="letter" style="--color: #ffffba; --delay: 0.3s">р</span>
+        <span class="letter" style="--color: #ffb3ba; --delay: 0.4s">е</span>
+        <span class="letter" style="--color: #bae1ff; --delay: 0.5s">н</span>
+        <span class="letter" style="--color: #baffc9; --delay: 0.6s">к</span>
+        <span class="letter" style="--color: #ffffba; --delay: 0.7s">о</span>
+        &nbsp;
+        <span class="letter" style="--color: #ffb3ba; --delay: 0.8s">С</span>
+        <span class="letter" style="--color: #bae1ff; --delay: 0.9s">о</span>
+        <span class="letter" style="--color: #baffc9; --delay: 1s">ф</span>
+        <span class="letter" style="--color: #ffffba; --delay: 1.1s">и</span>
+        <span class="letter" style="--color: #ffb3ba; --delay: 1.2s">я</span>
+      </h1>
+      
+      <p class="cv__tagline">
+        Студентка-первокурсница, матобесие, 18 годиков
+      </p>
+      
+      <ul class="cv__contacts">
+        <li><a href="mailto:your.email@gmail.com" class="custom-font">your.email@gmail.com</a></li>
+        <li><a href="https://github.com/imovechka" class="custom-font">github.com/imovechka</a></li>
+      </ul>
 
-        <!-- TODO: твой нестандартный элемент.
-             Пример: переключатель темы, anim, easter egg. -->
-        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
-          🌗
-        </button>
-      </header>
+      <!-- Кнопка переключения темы -->
+      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+        🌗
+      </button>
+    </header>
 
-      <section>
-        <h2>About</h2>
-        <p>
-          Заканчиваю первый курс тихонечко, не спеша, не шиша, четыре карандаша. Играю в судоку и хожу на гиревой спорт.
-        </p>
-      </section>
+    <section>
+      <h2>Обо мне</h2>
+      <p>
+        Заканчиваю первый курс тихонечко, не спеша, не шибко четыре карандаша. 
+        Играю в судоку и хожу на гиревой спорт.
+      </p>
+    </section>
 
-      <section>
-        <h2>Experience / Projects</h2>
-        <article>
-          <h3>Project / Role Title</h3>
-          <p class="cv__meta">Тикток хаус · 2021 — 2021</p>
-          <p>Пыталась с друзьями создать тикток хаус. Мы набрали 300 подписчиков, а потом все поссорились и хаус закрылся.</p>
-        </article>
-        <article>
-          <h3>Another One</h3>
-          <p class="cv__meta">Курсоая работа · 2026 - сейчас</p>
-          <p>Делаю курсовую работу (готово только 10%)</p>
-        </article>
-      </section>
+    <section>
+      <h2>Опыт и проекты</h2>
+      
+      <article class="project-card">
+        <h3>Тикток хаус</h3>
+        <p class="cv__meta">2021 — 2021</p>
+        <p>Пыталась с друзьями создать тикток хаус. Мы набрали 800 подписчиков, 
+        а потом все поссорились и хаус закрылся.</p>
+      </article>
+      
+      <article class="project-card">
+        <h3>Курсовая работа</h3>
+        <p class="cv__meta">2025 — сейчас</p>
+        <p>Делаю курсовую работу (готово только 10%).</p>
+      </article>
+    </section>
 
-      <section>
-        <h2>Skills</h2>
-        <ul class="cv__skills">
-          <li>C/C++ (чуть-чуть)</li>
-          <li>Python (чуть побольше)</li>
-          <li>Java Script (прям совсем чуть-чуть)</li>
-          <li>Умею выживать в дикой природе</li>
-        </ul>
-      </section>
-    </main>
+    <section>
+      <h2>Навыки</h2>
+      <ul class="cv__skills">
+        <li class="skill-item">Силы чуть-чуть</li>
+        <li class="skill-item">Ума чуть побольше</li>
+        <li class="skill-item">Времени прям совсем чуть-чуть</li>
+        <li class="skill-item">Умею выживать в дикой природе</li>
+      </ul>
+    </section>
 
-    <script type="module" src="./src/main.js"></script>
-  </body>
-</html>
+    <!-- Интерактивный элемент: счётчик посещений -->
+    <section class="interactive-section">
+      <h2> Случайный факт обо мне</h2>
+      <button id="fact-btn" class="fact-btn">Показать факт</button>
+      <p id="random-fact" class="random-fact"></p>
+    </section>
+  </main>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
