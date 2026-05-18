@@ -38,7 +38,6 @@ const randomFact = document.getElementById('random-fact');
 
 // 🎊 Функция конфетти (взрыв на 360°)
 function createConfetti(x, y) {
-  // Яркая палитра без коричневых блоков
   const colors = ['#c97a7a', '#7aafc9', '#7ab88a', '#b8b87a', '#d46a35', '#e9d5ff', '#fde68a', '#f9a8d4'];
   
   for (let i = 0; i < 45; i++) {
@@ -46,10 +45,9 @@ function createConfetti(x, y) {
     conf.className = 'confetti';
     
     const color = colors[Math.floor(Math.random() * colors.length)];
-    const shape = Math.random() > 0.5 ? 'circle' : 'square';
     const size = 5 + Math.random() * 7;
     
-    // Случайное направление и дальность
+    // Случайное направление на 360°
     const angle = Math.random() * Math.PI * 2;
     const distance = 70 + Math.random() * 140;
     const tx = Math.cos(angle) * distance;
@@ -60,13 +58,20 @@ function createConfetti(x, y) {
     conf.style.top = `${y}px`;
     conf.style.width = `${size}px`;
     conf.style.height = `${size}px`;
-    conf.style.borderRadius = shape === 'circle' ? '50%' : '2px';
-    conf.style.setProperty('--tx', `${tx}px`);
-    conf.style.setProperty('--ty', `${ty}px`);
-    conf.style.animationDelay = `${Math.random() * 0.08}s`;
+    conf.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    conf.style.opacity = '1';
+    conf.style.transform = 'translate(0, 0) scale(1)';
     
     document.body.appendChild(conf);
-    setTimeout(() => conf.remove(), 1400);
+    
+    // Запускаем полёт (небольшая задержка гарантирует срабатывание transition)
+    setTimeout(() => {
+      conf.style.transform = `translate(${tx}px, ${ty}px) scale(0.2)`;
+      conf.style.opacity = '0';
+    }, 10);
+    
+    // Удаляем из DOM после анимации
+    setTimeout(() => conf.remove(), 1300);
   }
 }
 
