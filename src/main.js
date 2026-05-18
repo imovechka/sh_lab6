@@ -74,6 +74,10 @@ function createConfetti(x, y) {
   }
 }
   factBtn.addEventListener('click', () => {
+      const rect = factBtn.getBoundingClientRect();
+  const x = rect.left + rect.width / 2;
+  const y = rect.top + rect.height / 2;
+  createConfetti(x, y);
     let idx;
     do { idx = Math.floor(Math.random() * facts.length); }
     while (idx === lastFactIndex && facts.length > 1);
