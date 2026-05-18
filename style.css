@@ -1,3 +1,12 @@
+/* Подключаем шрифты */
+@font-face {
+  font-family: 'Harlequinade';
+  src: url('./fonts/harlequinade-madness.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @font-face {
   font-family: 'Earwig Factory';
   src: url('./fonts/earwig-factory-rg.ttf') format('truetype');
@@ -5,6 +14,165 @@
   font-style: normal;
   font-display: swap;
 }
+
+/* Применяем к контактам */
+.custom-font {
+  font-family: 'Earwig Factory', cursive;
+  font-size: 1.1em;
+}
+
+/* Анимированное имя */
+.cv__name {
+  font-family: 'Harlequinade', cursive;
+  font-size: 3rem;
+  margin: 0 0 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.1rem;
+}
+
+.letter {
+  display: inline-block;
+  color: var(--color);
+  animation: wobble 3s ease-in-out infinite;
+  animation-delay: var(--delay);
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.3s;
+}
+
+.letter:hover {
+  transform: scale(1.3) rotate(5deg);
+  cursor: pointer;
+}
+
+@keyframes wobble {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-5px) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(3px) rotate(2deg);
+  }
+  75% {
+    transform: translateY(-3px) rotate(-1deg);
+  }
+}
+
+/* Анимация карточек проектов */
+.project-card {
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.project-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+.project-card:hover::before {
+  left: 100%;
+}
+
+.project-card:hover {
+  transform: translateY(-5px) rotate(1deg);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  border-color: var(--accent);
+}
+
+/* Навыки с анимацией */
+.skill-item {
+  display: inline-block;
+  margin: 0.3rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, var(--accent), var(--bg));
+  border-radius: 20px;
+  color: white;
+  font-weight: bold;
+  transition: all 0.3s;
+  animation: float 4s ease-in-out infinite;
+}
+
+.skill-item:nth-child(2) { animation-delay: 0.5s; }
+.skill-item:nth-child(3) { animation-delay: 1s; }
+.skill-item:nth-child(4) { animation-delay: 1.5s; }
+
+.skill-item:hover {
+  transform: scale(1.1) rotate(3deg);
+  cursor: pointer;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* Интерактивная секция */
+.interactive-section {
+  background: linear-gradient(135deg, var(--accent), var(--bg));
+  padding: 2rem;
+  border-radius: 15px;
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.fact-btn {
+  background: white;
+  color: var(--accent);
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s;
+  margin: 1rem 0;
+}
+
+.fact-btn:hover {
+  transform: scale(1.05) rotate(-2deg);
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.random-fact {
+  font-size: 1.2rem;
+  font-weight: bold;
+  min-height: 3rem;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.random-fact.show {
+  opacity: 1;
+}
+
+/* Заголовки обычным шрифтом */
+section h2 {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin: 0 0 1rem;
+  border-bottom: 3px solid var(--accent);
+  padding-bottom: 0.5rem;
+  display: inline-block;
+}
+
+/* Остальной CSS оставь как был */
 :root {
   --bg: #ffffff;
   --fg: #0a0a0a;
