@@ -22,55 +22,102 @@
   font-display: swap;
 }
 
-/* Переменные и тема */
+/* ── Переменные ── */
 :root {
-  --bg: #ffffff;
-  --fg: #0a0a0a;
-  --muted: #666;
-  --accent: #059669;
-  --border: #d4d4d4;
+  --bg:     #f4efe6;
+  --fg:     #1a1208;
+  --muted:  #6b5c3e;
+  --accent: #8b3a1a;
+  --border: #c8b89a;
+  --paper:  #ede8db;
+  --ink:    #2a1f0e;
 }
 
 [data-theme='dark'] {
-  --bg: #0e0e10;
-  --fg: #f5f5f5;
-  --muted: #999;
-  --accent: #6aa6ff;
-  --border: #2a2a2e;
+  --bg:     #1a140d;
+  --fg:     #e8dfc8;
+  --muted:  #a8936e;
+  --accent: #d46a35;
+  --border: #4a3920;
+  --paper:  #221a10;
+  --ink:    #e8dfc8;
 }
 
 * { box-sizing: border-box; }
 
+/* ── Газетный фон ── */
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  background: var(--bg);
+  font-family: 'Georgia', 'Times New Roman', serif;
+  background-color: var(--bg);
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 28px,
+      color-mix(in srgb, var(--border) 20%, transparent) 28px,
+      color-mix(in srgb, var(--border) 20%, transparent) 29px
+    ),
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 3px,
+      color-mix(in srgb, var(--border) 8%, transparent) 3px,
+      color-mix(in srgb, var(--border) 8%, transparent) 4px
+    );
   color: var(--fg);
-  line-height: 1.5;
-  transition: background 0.2s, color 0.2s;
+  line-height: 1.6;
+  transition: background 0.3s, color 0.3s;
 }
 
+/* ── Основной контейнер ── */
 .cv {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 3rem 1.5rem;
+  max-width: 740px;
+  margin: 2rem auto;
+  padding: 3rem 3.5rem;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  box-shadow:
+    4px 4px 0 color-mix(in srgb, var(--border) 60%, transparent),
+    8px 8px 0 color-mix(in srgb, var(--border) 25%, transparent);
+  position: relative;
 }
 
+.cv::before {
+  content: '';
+  position: absolute;
+  inset: 10px;
+  border: 1px solid color-mix(in srgb, var(--border) 45%, transparent);
+  pointer-events: none;
+}
+
+/* ── Шапка ── */
 .cv__header {
   position: relative;
-  border-bottom: 1px solid var(--border);
+  text-align: center;
+  border-bottom: 3px double var(--border);
   padding-bottom: 1.5rem;
   margin-bottom: 2rem;
 }
 
-/* Имя (Harlequinade + анимация) */
+.cv__header::before {
+  content: '✦ ── ✦ ── ✦';
+  display: block;
+  font-size: 0.75rem;
+  color: var(--muted);
+  letter-spacing: 0.4em;
+  margin-bottom: 1rem;
+}
+
+/* ── Имя ── */
 .cv__name {
   font-family: 'Harlequinade', cursive;
-  font-size: 3rem;
-  margin: 0 0 0.5rem;
+  font-size: 3.2rem;
+  margin: 0 0 0.4rem;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.1rem;
+  justify-content: center;
+  gap: 0.05rem;
   line-height: 1.2;
 }
 
@@ -79,112 +126,157 @@ body {
   color: var(--color);
   animation: wobble 3s ease-in-out infinite;
   animation-delay: var(--delay);
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.25);
+  filter: drop-shadow(0 1px 0 color-mix(in srgb, var(--ink) 25%, transparent));
   transition: transform 0.3s;
 }
 
 .letter:hover {
-  transform: scale(1.2) rotate(5deg);
+  transform: scale(1.15) rotate(4deg);
   cursor: pointer;
 }
 
 @keyframes wobble {
   0%, 100% { transform: translateY(0) rotate(0deg); }
-  25% { transform: translateY(-4px) rotate(-2deg); }
-  50% { transform: translateY(2px) rotate(2deg); }
-  75% { transform: translateY(-2px) rotate(-1deg); }
+  25%  { transform: translateY(-3px) rotate(-1.5deg); }
+  50%  { transform: translateY(2px)  rotate(1.5deg); }
+  75%  { transform: translateY(-1px) rotate(-0.8deg); }
 }
 
+/* ── Подзаголовок ── */
 .cv__tagline {
+  font-style: italic;
   color: var(--muted);
-  margin: 0 0 1rem;
-  font-size: 1.1rem;
+  margin: 0.3rem 0 1rem;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
 }
 
-/* Контакты (Earwig Factory) */
+.cv__tagline::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 2px;
+  background: var(--accent);
+  margin: 0.6rem auto 0;
+}
+
+/* ── Контакты ── */
 .cv__contacts {
   list-style: none;
   padding: 0;
-  margin: 0 0 1.5rem;
+  margin: 0 0 1.2rem;
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  justify-content: center;
+  gap: 1.2rem;
 }
 
 .custom-font {
   font-family: 'Earwig Factory', cursive;
-  font-size: 1.2em;
+  font-size: 1.1em;
   color: var(--accent);
   text-decoration: none;
+  border-bottom: 1px dotted var(--accent);
+  transition: opacity 0.2s;
 }
 
-.custom-font:hover { text-decoration: underline; }
+.custom-font:hover { opacity: 0.65; }
 
-/* Кнопка темы */
+/* ── Кнопка темы ── */
 .theme-toggle {
   position: absolute;
   top: 0;
   right: 0;
   background: transparent;
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 0.4rem 0.7rem;
+  border-radius: 3px;
+  padding: 0.3rem 0.6rem;
   cursor: pointer;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
+  color: var(--muted);
   transition: background 0.2s;
 }
 
-.theme-toggle:hover { background: var(--border); }
+.theme-toggle:hover {
+  background: color-mix(in srgb, var(--border) 35%, transparent);
+}
 
-/* Секции */
-section { margin-bottom: 2.5rem; }
+/* ── Секции ── */
+section { margin-bottom: 2.2rem; }
 
-/* Заголовки секций — Bimbo Finetip + scatter-анимация */
+/* ── Заголовки секций ── */
 section h2 {
   font-family: 'Bimbo Finetip', cursive;
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--muted);
+  letter-spacing: 0.15em;
+  color: var(--ink);
   margin: 0 0 1rem;
-  border-bottom: 2px solid var(--accent);
   padding-bottom: 0.4rem;
-  display: inline-block;
+  display: block;
+  border-bottom: 1px solid var(--border);
+  position: relative;
   cursor: default;
 }
 
-/* Scatter-анимация: каждая буква разлетается при hover */
-.scatter-heading {
-  /* буквы будут обёрнуты в span через JS */
+section h2::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 40px;
+  height: 2px;
+  background: var(--accent);
 }
 
+/* ── Scatter-анимация: ЛЁГКИЙ разброс, текст читаем ── */
 .scatter-heading .h-letter {
   display: inline-block;
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+  transition:
+    transform 0.35s cubic-bezier(0.34, 1.4, 0.64, 1),
+    opacity   0.35s ease;
 }
 
+/* При hover буквы чуть смещаются, но остаются читаемыми */
 .scatter-heading:hover .h-letter {
   transform: translate(var(--tx), var(--ty)) rotate(var(--tr));
-  opacity: 0.3;
+  opacity: 0.5;
 }
 
+/* ── Карточки проектов ── */
 article {
-  margin-bottom: 1.5rem;
-  padding: 1rem;
+  margin-bottom: 1.4rem;
+  padding: 1rem 1.2rem;
+  background: color-mix(in srgb, var(--paper) 50%, white);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-left: 3px solid var(--accent);
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
-article:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+[data-theme='dark'] article {
+  background: color-mix(in srgb, var(--paper) 70%, black);
 }
 
-article h3 { margin: 0 0 0.25rem; font-size: 1.1rem; }
-.cv__meta { color: var(--muted); font-size: 0.9rem; margin: 0 0 0.5rem; }
+article:hover {
+  transform: translateX(4px);
+  box-shadow: -3px 0 0 var(--accent);
+}
 
-/* Навыки */
+article h3 {
+  font-family: 'Georgia', serif;
+  margin: 0 0 0.2rem;
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+
+.cv__meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-style: italic;
+  margin: 0 0 0.4rem;
+}
+
+/* ── Навыки ── */
 .cv__skills {
   list-style: none;
   padding: 0;
@@ -196,13 +288,15 @@ article h3 { margin: 0 0 0.25rem; font-size: 1.1rem; }
 
 .skill-item {
   display: inline-block;
-  padding: 0.4rem 0.8rem;
-  background: var(--bg);
+  padding: 0.3rem 0.85rem;
+  background: transparent;
   border: 1px solid var(--accent);
-  border-radius: 20px;
-  font-size: 0.95rem;
-  transition: all 0.3s;
+  font-family: 'Georgia', serif;
+  font-size: 0.9rem;
+  color: var(--accent);
+  transition: all 0.25s;
   animation: float 3s ease-in-out infinite;
+  letter-spacing: 0.03em;
 }
 
 .skill-item:nth-child(2) { animation-delay: 0.5s; }
@@ -211,57 +305,81 @@ article h3 { margin: 0 0 0.25rem; font-size: 1.1rem; }
 
 .skill-item:hover {
   background: var(--accent);
-  color: white;
-  transform: scale(1.05);
+  color: var(--paper);
 }
 
 @keyframes float {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
+  50%  { transform: translateY(-3px); }
 }
 
-/* Интерактивная секция */
+/* ── Интерактивная секция ── */
 .interactive-section {
-  background: linear-gradient(135deg, var(--accent), var(--bg));
+  background: color-mix(in srgb, var(--accent) 7%, var(--paper));
+  border: 1px solid var(--border);
+  border-top: 3px double var(--accent);
   padding: 2rem;
-  border-radius: 15px;
   text-align: center;
   margin-top: 3rem;
-  color: white;
+}
+
+.interactive-section::before {
+  content: '— ✦ —';
+  display: block;
+  font-size: 0.75rem;
+  color: var(--muted);
+  letter-spacing: 0.35em;
+  margin-bottom: 0.8rem;
 }
 
 .interactive-section h2 {
-  color: white;
-  border-color: white;
-  font-family: 'Bimbo Finetip', cursive;
+  color: var(--ink);
+  font-size: 1.3rem;
+  display: inline-block;
+  border-bottom: none;
 }
 
+.interactive-section h2::before { display: none; }
+
 .fact-btn {
-  background: white;
-  color: var(--accent);
+  background: var(--accent);
+  color: var(--paper);
   border: none;
-  padding: 0.8rem 1.5rem;
-  font-size: 1rem;
-  border-radius: 30px;
+  padding: 0.6rem 1.6rem;
+  font-family: 'Georgia', serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
   cursor: pointer;
-  font-weight: bold;
   transition: all 0.2s;
-  margin: 1rem 0;
+  margin: 0.8rem 0;
 }
 
 .fact-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  background: var(--ink);
+  transform: translateY(-1px);
 }
 
 .fact-btn:active { transform: scale(0.98); }
 
 .random-fact {
-  font-size: 1.1rem;
-  font-weight: bold;
-  min-height: 2.5rem;
+  font-family: 'Georgia', serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--fg);
+  min-height: 2rem;
   opacity: 0;
   transition: opacity 0.3s ease;
 }
 
 .random-fact.show { opacity: 1; }
+
+/* ── Декоративный колонтитул ── */
+.cv::after {
+  content: '✦';
+  display: block;
+  text-align: center;
+  color: var(--muted);
+  font-size: 1rem;
+  margin-top: 2rem;
+  opacity: 0.4;
+}
