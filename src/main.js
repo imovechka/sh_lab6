@@ -36,48 +36,55 @@ let lastFactIndex = -1;
 const factBtn    = document.getElementById('fact-btn');
 const randomFact = document.getElementById('random-fact');
 
-if (factBtn && randomFact) {
-  // показать первый факт сразу
-  randomFact.textContent = 'нажми на кнопку...';
-  randomFact.style.opacity = '1';
-  randomFact.classList.add('show');
-  // 🎊 Функция для конфетти
+// 🎊 Функция конфетти (взрыв на 360°)
 function createConfetti(x, y) {
-  const colors = ['#c97a7a', '#7aafc9', '#7ab88a', '#b8b87a', '#d46a35', '#e9d5ff'];
+  // Яркая палитра без коричневых блоков
+  const colors = ['#c97a7a', '#7aafc9', '#7ab88a', '#b8b87a', '#d46a35', '#e9d5ff', '#fde68a', '#f9a8d4'];
   
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < 45; i++) {
     const conf = document.createElement('div');
     conf.className = 'confetti';
     
-    // Случайные параметры
     const color = colors[Math.floor(Math.random() * colors.length)];
     const shape = Math.random() > 0.5 ? 'circle' : 'square';
-    const size = 6 + Math.random() * 8;
-    const delay = Math.random() * 0.3;
-    const duration = 2 + Math.random() * 2;
-    const offsetX = (Math.random() - 0.5) * 200;
+    const size = 5 + Math.random() * 7;
     
-    // Стили
+    // Случайное направление и дальность
+    const angle = Math.random() * Math.PI * 2;
+    const distance = 70 + Math.random() * 140;
+    const tx = Math.cos(angle) * distance;
+    const ty = Math.sin(angle) * distance;
+    
     conf.style.background = color;
-    conf.style.left = `${x + offsetX}px`;
+    conf.style.left = `${x}px`;
     conf.style.top = `${y}px`;
     conf.style.width = `${size}px`;
     conf.style.height = `${size}px`;
-    conf.style.borderRadius = shape === 'circle' ? '50%' : '0';
-    conf.style.animationDelay = `${delay}s`;
-    conf.style.animationDuration = `${duration}s`;
+    conf.style.borderRadius = shape === 'circle' ? '50%' : '2px';
+    conf.style.setProperty('--tx', `${tx}px`);
+    conf.style.setProperty('--ty', `${ty}px`);
+    conf.style.animationDelay = `${Math.random() * 0.08}s`;
     
     document.body.appendChild(conf);
-    
-    // Удаляем после анимации
-    setTimeout(() => conf.remove(), (duration + delay) * 1000);
+    setTimeout(() => conf.remove(), 1400);
   }
 }
+
+// ── Факты + конфетти ──
+let lastFactIndex = -1;
+const factBtn    = document.getElementById('fact-btn');
+const randomFact = document.getElementById('random-fact');
+
+if (factBtn && randomFact) {
+  randomFact.textContent = 'нажми на кнопку...';
+  randomFact.style.opacity = '1';
+  randomFact.classList.add('show');
+
   factBtn.addEventListener('click', () => {
-      const rect = factBtn.getBoundingClientRect();
-  const x = rect.left + rect.width / 2;
-  const y = rect.top + rect.height / 2;
-  createConfetti(x, y);
+    // 🎊 Запуск взрыва конфетти от центра кнопки
+    const rect = factBtn.getBoundingClientRect();
+    createConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
     let idx;
     do { idx = Math.floor(Math.random() * facts.length); }
     while (idx === lastFactIndex && facts.length > 1);
@@ -94,6 +101,31 @@ function createConfetti(x, y) {
     setTimeout(() => { factBtn.style.transform = ''; }, 140);
   });
 }
+
+// 📋 Кнопки копирования (Email + GitHub)
+const copyTargets = [
+  { id: 'copy-email', text: 'sofiashnurenko@gmail.com' },
+  { id: 'copy-github', text: 'https://github.com/imovechka' }
+];
+
+copyTargets.forEach(target => {
+  const btn = document.getElementById(target.id);
+  if (!btn) return;
+
+  btn.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(target.text);
+      btn.classList.add('copied');
+      btn.textContent = '✓';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.textContent = '📋';
+      }, 1500);
+    } catch (err) {
+      console.warn('Копирование не сработало:', err);
+    }
+  });
+});
 
 // Тема
 const themeToggle = document.getElementById('theme-toggle');
