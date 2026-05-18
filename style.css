@@ -597,18 +597,47 @@ section h2::before {
 @keyframes pop {
   50% { transform: scale(1.3); }
 }
-/* ── Конфетти ── */
+/* ── Конфетти (взрыв во все стороны) ── */
 .confetti {
   position: fixed;
-  width: 10px;
-  height: 10px;
   pointer-events: none;
-  animation: fall linear forwards;
-  z-index: 1000;
+  z-index: 9999;
+  animation: explode 1.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
-@keyframes fall {
-  to {
-    transform: translateY(100vh) rotate(720deg);
-    opacity: 0;
-  }
+@keyframes explode {
+  0% { transform: translate(0, 0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--tx), var(--ty)) scale(0.2); opacity: 0; }
+}
+
+/* ── Кнопки копирования ── */
+.copy-btn {
+  background: transparent;
+  border: 1px dashed var(--border);
+  border-radius: 4px;
+  padding: 0.15rem 0.45rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: var(--accent);
+  transition: all 0.2s;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.copy-btn:hover {
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  transform: scale(1.1);
+  border-style: solid;
+}
+.copy-btn:active { transform: scale(0.95); }
+.copy-btn.copied {
+  background: #7ab88a;
+  color: #fff;
+  border-color: #7ab88a;
+  border-style: solid;
+  animation: pop 0.25s ease;
+}
+@keyframes pop {
+  50% { transform: scale(1.2); }
 }
