@@ -41,7 +41,38 @@ if (factBtn && randomFact) {
   randomFact.textContent = 'нажми на кнопку...';
   randomFact.style.opacity = '1';
   randomFact.classList.add('show');
-
+  // 🎊 Функция для конфетти
+function createConfetti(x, y) {
+  const colors = ['#c97a7a', '#7aafc9', '#7ab88a', '#b8b87a', '#d46a35', '#e9d5ff'];
+  
+  for (let i = 0; i < 30; i++) {
+    const conf = document.createElement('div');
+    conf.className = 'confetti';
+    
+    // Случайные параметры
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const shape = Math.random() > 0.5 ? 'circle' : 'square';
+    const size = 6 + Math.random() * 8;
+    const delay = Math.random() * 0.3;
+    const duration = 2 + Math.random() * 2;
+    const offsetX = (Math.random() - 0.5) * 200;
+    
+    // Стили
+    conf.style.background = color;
+    conf.style.left = `${x + offsetX}px`;
+    conf.style.top = `${y}px`;
+    conf.style.width = `${size}px`;
+    conf.style.height = `${size}px`;
+    conf.style.borderRadius = shape === 'circle' ? '50%' : '0';
+    conf.style.animationDelay = `${delay}s`;
+    conf.style.animationDuration = `${duration}s`;
+    
+    document.body.appendChild(conf);
+    
+    // Удаляем после анимации
+    setTimeout(() => conf.remove(), (duration + delay) * 1000);
+  }
+}
   factBtn.addEventListener('click', () => {
     let idx;
     do { idx = Math.floor(Math.random() * facts.length); }
