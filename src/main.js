@@ -1,11 +1,28 @@
-import './style.css';
+import '../style.css';
+
+// Scatter-анимация для заголовков секций
+document.querySelectorAll('.scatter-heading').forEach(heading => {
+  const text = heading.textContent;
+  heading.innerHTML = text
+    .split('')
+    .map(char => {
+      if (char === ' ') return ' ';
+      const tx = (Math.random() - 0.5) * 120; // -60px до +60px по X
+      const ty = (Math.random() - 0.5) * 80;  // -40px до +40px по Y
+      const tr = (Math.random() - 0.5) * 60;  // -30deg до +30deg поворот
+      return `<span class="h-letter" style="--tx:${tx.toFixed(1)}px; --ty:${ty.toFixed(1)}px; --tr:${tr.toFixed(1)}deg">${char}</span>`;
+    })
+    .join('');
+});
+
+// Случайные факты
 const facts = [
   "Я люблю заниматься посткроссингом 💌",
   "Я обожаю судоку и решаю их каждый день 🧩",
   "Я хожу на гиревой спорт 💪",
   "У меня есть собачка боксёр Буч (отсылочка) 🐶",
   "Я верю, что тихонечко — это лучшая стратегия 🐢",
-  "Я ненавижу аниме \"Магическая битва\" ‍♀️"
+  "Я ненавижу аниме \"Магическая битва\" 🙅‍♀️"
 ];
 
 let lastFactIndex = -1;
@@ -19,21 +36,22 @@ if (factBtn && randomFact) {
     do {
       randomIndex = Math.floor(Math.random() * facts.length);
     } while (randomIndex === lastFactIndex && facts.length > 1);
-    
+
     lastFactIndex = randomIndex;
-    
+
     randomFact.style.opacity = '0';
     setTimeout(() => {
       randomFact.textContent = facts[randomIndex];
       randomFact.style.opacity = '1';
       randomFact.classList.add('show');
     }, 200);
-    
+
     factBtn.style.transform = 'scale(0.95)';
     setTimeout(() => { factBtn.style.transform = ''; }, 150);
   });
 }
 
+// Переключение темы
 const themeToggle = document.getElementById('theme-toggle');
 const html = document.documentElement;
 
