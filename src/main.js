@@ -84,7 +84,6 @@ if (factBtn && randomFact) {
     while (idx === lastFactIndex && facts.length > 1);
     lastFactIndex = idx;
 
-    randomFact.style.opacity = '0';
     randomFact.classList.remove('show');
     setTimeout(() => {
       randomFact.textContent = facts[idx];
