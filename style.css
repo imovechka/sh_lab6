@@ -1,464 +1,171 @@
-@font-face {
-  font-family: 'Harlequinade';
-  src: url('./fonts/harlequinade-madness.ttf') format('truetype');
-  font-weight: normal; font-style: normal; font-display: swap;
-}
-@font-face {
-  font-family: 'Earwig Factory';
-  src: url('./fonts/earwig-factory-rg.ttf') format('truetype');
-  font-weight: normal; font-style: normal; font-display: swap;
-}
-@font-face {
-  font-family: 'Bimbo Finetip';
-  src: url('./fonts/bimbo-finetip.ttf') format('truetype');
-  font-weight: normal; font-style: normal; font-display: swap;
+import '../style.css';
+
+// ── Дата на чеке ──
+const dateEl = document.getElementById('receipt-date');
+if (dateEl) {
+  dateEl.textContent = new Date().toLocaleDateString('ru-RU', {
+    day: '2-digit', month: '2-digit', year: 'numeric'
+  });
 }
 
-:root {
-  --bg:        #f4efe6;
-  --fg:        #1a1208;
-  --muted:     #6b5c3e;
-  --accent:    #8b3a1a;
-  --border:    #c8b89a;
-  --paper:     #ede8db;
-  --ink:       #2a1f0e;
-  --sticker-y: #fef08a;
-  --sticker-p: #e9d5ff;
-  --sticker-b: #bae6fd;
-  --receipt-bg:#fdfaf4;
-  --receipt-f: #1a1208;
-  --bubble-fg: #1a1208;
-}
-[data-theme='dark'] {
-  --bg:        #1a140d;
-  --fg:        #e8dfc8;
-  --muted:     #a8936e;
-  --accent:    #d46a35;
-  --border:    #4a3920;
-  --paper:     #221a10;
-  --ink:       #e8dfc8;
-  --sticker-y: #713f12;
-  --sticker-p: #4c1d95;
-  --sticker-b: #0c4a6e;
-  --receipt-bg:#1a150a;
-  --receipt-f: #e8dfc8;
-  --bubble-fg: #1a1208;
+// ── Scatter-анимация заголовков — маленький разброс ──
+document.querySelectorAll('.scatter-heading').forEach(heading => {
+  const text = heading.textContent;
+  heading.innerHTML = text.split('').map(char => {
+    if (char === ' ') return '&nbsp;';
+    // ±10px X, ±6px Y, ±8deg — текст остаётся читаемым
+    const tx = (Math.random() - 0.5) * 20;
+    const ty = (Math.random() - 0.5) * 12;
+    const tr = (Math.random() - 0.5) * 16;
+    return `<span class="h-letter" style="--tx:${tx.toFixed(1)}px;--ty:${ty.toFixed(1)}px;--tr:${tr.toFixed(1)}deg">${char}</span>`;
+  }).join('');
+});
+
+// ── Конфетти с гравитацией ──
+function createConfetti(originX, originY) {
+  const colors = ['#c97a7a','#7aafc9','#7ab88a','#b8b87a','#d46a35','#e9d5ff','#fde68a','#f9a8d4'];
+  const count = 48;
+
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti';
+
+    const size   = 5 + Math.random() * 6;
+    const color  = colors[Math.floor(Math.random() * colors.length)];
+    const isCirc = Math.random() > 0.45;
+
+    // начальная позиция — центр кнопки
+    el.style.cssText = `
+      left: ${originX}px;
+      top:  ${originY}px;
+      width:  ${size}px;
+      height: ${size}px;
+      background: ${color};
+      border-radius: ${isCirc ? '50%' : '2px'};
+      opacity: 1;
+    `;
+    document.body.appendChild(el);
+
+    // физика: случайная начальная скорость во все стороны
+    const angle    = Math.random() * Math.PI * 2;
+    const speed    = 4 + Math.random() * 7;       // px за кадр
+    let   vx       = Math.cos(angle) * speed;
+    let   vy       = Math.sin(angle) * speed;
+    const gravity  = 0.25;
+    const drag     = 0.97;
+    const rotate   = (Math.random() - 0.5) * 12;  // deg за кадр
+    let   deg      = 0;
+    let   x = originX, y = originY;
+    let   opacity  = 1;
+    let   frame    = 0;
+    const maxFrames = 70;
+
+    function tick() {
+      frame++;
+      vx  *= drag;
+      vy  *= drag;
+      vy  += gravity;
+      x   += vx;
+      y   += vy;
+      deg += rotate;
+      opacity = Math.max(0, 1 - frame / maxFrames);
+
+      el.style.left    = `${x}px`;
+      el.style.top     = `${y}px`;
+      el.style.opacity = opacity;
+      el.style.transform = `rotate(${deg}deg)`;
+
+      if (frame < maxFrames) {
+        requestAnimationFrame(tick);
+      } else {
+        el.remove();
+      }
+    }
+    // небольшой случайный старт чтобы не все сразу
+    setTimeout(() => requestAnimationFrame(tick), Math.random() * 80);
+  }
 }
 
-* { box-sizing: border-box; }
+// ── Факты ──
+const facts = [
+  'Я люблю заниматься посткроссингом 💌',
+  'Я обожаю судоку и решаю их каждый день 🧩',
+  'Я хожу на гиревой спорт 💪',
+  'У меня есть собачка боксёр Буч (отсылочка) 🐶',
+  'Я верю, что тихонечко — это лучшая стратегия 🐢',
+  'Я ненавижу аниме «Магическая битва» 🙅‍♀️',
+  'Я умею выживать в дикой природе 🌲',
+  'Собираю открытки со всего мира через посткроссинг 🌍',
+  'Могу решить судоку быстрее, чем выпить чай ☕',
+  'Заканчиваю первый курс с четырьмя карандашами и без шиша 📐',
+  'Моя курсовая готова ровно на 10% — и это прогресс 📊'
+];
 
-body {
-  margin: 0;
-  font-family: 'Georgia', 'Times New Roman', serif;
-  background-color: var(--bg);
-  background-image:
-    repeating-linear-gradient(
-      0deg, transparent, transparent 28px,
-      color-mix(in srgb, var(--border) 20%, transparent) 28px,
-      color-mix(in srgb, var(--border) 20%, transparent) 29px
-    ),
-    repeating-linear-gradient(
-      45deg, transparent, transparent 3px,
-      color-mix(in srgb, var(--border) 8%, transparent) 3px,
-      color-mix(in srgb, var(--border) 8%, transparent) 4px
-    );
-  color: var(--fg);
-  line-height: 1.6;
-  transition: background 0.3s, color 0.3s;
-}
+let lastFactIndex = -1;
+const factBtn    = document.getElementById('fact-btn');
+const randomFact = document.getElementById('random-fact');
 
-.cv {
-  max-width: 740px;
-  margin: 2rem auto;
-  padding: 3rem 3.5rem;
-  background: var(--paper);
-  border: 1px solid var(--border);
-  box-shadow:
-    4px 4px 0 color-mix(in srgb, var(--border) 60%, transparent),
-    8px 8px 0 color-mix(in srgb, var(--border) 25%, transparent);
-  position: relative;
-}
+if (factBtn && randomFact) {
+  randomFact.textContent = 'нажми на кнопку...';
+  randomFact.classList.add('show');
 
-/* тонкая рамка внутри */
-.cv::before {
-  content: '';
-  position: absolute;
-  inset: 10px;
-  border: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
-  pointer-events: none;
-}
+  factBtn.addEventListener('click', () => {
+    // конфетти из центра кнопки
+    const r = factBtn.getBoundingClientRect();
+    createConfetti(r.left + r.width / 2, r.top + r.height / 2);
 
-/* ── Шапка — без псевдоэлементов со звёздочками ── */
-.cv__header {
-  position: relative;
-  text-align: center;
-  border-bottom: 2px solid var(--border);
-  padding-bottom: 1.5rem;
-  margin-bottom: 2.5rem;
+    let idx;
+    do { idx = Math.floor(Math.random() * facts.length); }
+    while (idx === lastFactIndex && facts.length > 1);
+    lastFactIndex = idx;
+
+    randomFact.classList.remove('show');
+    randomFact.style.opacity = '0';
+    setTimeout(() => {
+      randomFact.textContent = facts[idx];
+      randomFact.classList.add('show');
+    }, 220);
+
+    factBtn.style.transform = 'scale(0.95) rotate(-1deg)';
+    setTimeout(() => { factBtn.style.transform = ''; }, 150);
+  });
 }
 
-.cv__name {
-  font-family: 'Harlequinade', cursive;
-  font-size: 3.2rem;
-  margin: 0 0 0.4rem;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.05rem;
-  line-height: 1.2;
-}
-.letter {
-  display: inline-block;
-  color: var(--color);
-  animation: wobble 3s ease-in-out infinite;
-  animation-delay: var(--delay);
-  filter: drop-shadow(0 1px 0 color-mix(in srgb, var(--ink) 25%, transparent));
-  transition: transform 0.3s;
-}
-.letter:hover { transform: scale(1.15) rotate(4deg); cursor: pointer; }
-@keyframes wobble {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  25%  { transform: translateY(-3px) rotate(-1.5deg); }
-  50%  { transform: translateY(2px)  rotate(1.5deg); }
-  75%  { transform: translateY(-1px) rotate(-0.8deg); }
-}
+// ── Кнопки копирования — единая логика для всех ──
+document.querySelectorAll('.copy-btn[data-copy]').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const text = btn.dataset.copy;
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      // fallback для старых браузеров
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+    }
+    btn.classList.add('copied');
+    btn.textContent = '✓';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.textContent = '📋';
+    }, 1500);
+  });
+});
 
-.cv__tagline {
-  font-style: italic;
-  color: var(--muted);
-  margin: 0.3rem 0 1rem;
-  font-size: 1rem;
-  letter-spacing: 0.05em;
-}
-.cv__tagline::after {
-  content: '';
-  display: block;
-  width: 60px;
-  height: 2px;
-  background: var(--accent);
-  margin: 0.6rem auto 0;
-}
-
-.cv__contacts {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1.2rem;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem;
-}
-.cv__contacts li {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-}
-.custom-font {
-  font-family: 'Earwig Factory', cursive;
-  font-size: 1.1em;
-  color: var(--accent);
-  text-decoration: none;
-  border-bottom: 1px dotted var(--accent);
-  transition: opacity 0.2s;
-}
-.custom-font:hover { opacity: 0.65; }
-
-/* Кнопка копирования */
-.copy-btn {
-  background: transparent;
-  border: 1px dashed var(--border);
-  border-radius: 4px;
-  padding: 0.15rem 0.4rem;
-  cursor: pointer;
-  font-size: 0.85rem;
-  color: var(--muted);
-  transition: all 0.2s;
-  line-height: 1;
-}
-.copy-btn:hover {
-  background: color-mix(in srgb, var(--accent) 12%, transparent);
-  border-color: var(--accent);
-  border-style: solid;
-  color: var(--accent);
-}
-.copy-btn.copied {
-  background: #7ab88a;
-  color: #fff;
-  border-color: #7ab88a;
-  border-style: solid;
-  animation: pop 0.25s ease;
-}
-@keyframes pop {
-  50% { transform: scale(1.25); }
-}
-
-.theme-toggle {
-  position: absolute;
-  top: 0; right: 0;
-  background: transparent;
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  padding: 0.3rem 0.6rem;
-  cursor: pointer;
-  font-size: 1.1rem;
-  color: var(--muted);
-  transition: background 0.2s;
-}
-.theme-toggle:hover { background: color-mix(in srgb, var(--border) 35%, transparent); }
-
-/* ── Секции ── */
-section { margin-bottom: 2.5rem; }
-
-/* Секции без псевдоэлементов-наклеек */
-.section-about::before,
-.section-receipt::before,
-.section-skills::before { display: none; }
-
-section h2 {
-  font-family: 'Bimbo Finetip', cursive;
-  font-size: 1.5rem;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--ink);
-  margin: 0 0 1rem;
-  padding-bottom: 0.4rem;
-  display: block;
-  border-bottom: 1px solid var(--border);
-  position: relative;
-  cursor: default;
-}
-section h2::before {
-  content: '';
-  position: absolute;
-  left: 0; bottom: -1px;
-  width: 40px; height: 2px;
-  background: var(--accent);
-}
-
-/* Scatter — буквы чуть шевелятся, текст читаем */
-.scatter-heading .h-letter {
-  display: inline-block;
-  transition: transform 0.3s cubic-bezier(0.34, 1.3, 0.64, 1), opacity 0.3s ease;
-}
-.scatter-heading:hover .h-letter {
-  transform: translate(var(--tx), var(--ty)) rotate(var(--tr));
-  opacity: 0.5;
-}
-
-/* ── Чек ── */
-.receipt {
-  background: var(--receipt-bg);
-  color: var(--receipt-f);
-  border: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
-  padding: 1.4rem 1.6rem 1rem;
-  font-family: 'Courier New', monospace;
-  font-size: 0.85rem;
-  max-width: 420px;
-  margin: 0 auto;
-  transform: rotate(-0.5deg);
-  box-shadow: 2px 2px 0 color-mix(in srgb, var(--border) 50%, transparent);
-  position: relative;
-}
-.receipt::before {
-  content: '';
-  position: absolute;
-  top: -8px; left: 0; right: 0; height: 8px;
-  background:
-    radial-gradient(circle at 6px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 18px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 30px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 42px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 54px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 66px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 78px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 90px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 102px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 114px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 126px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 138px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 150px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 162px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 174px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 186px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 198px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 210px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 222px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 234px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 246px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 258px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 270px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 282px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 294px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 306px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 318px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 330px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 342px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 354px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 366px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 378px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 390px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 402px 100%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 414px 100%, var(--paper) 5px, transparent 5px);
-  background-color: var(--receipt-bg);
-}
-.receipt::after {
-  content: '';
-  position: absolute;
-  bottom: -8px; left: 0; right: 0; height: 8px;
-  background:
-    radial-gradient(circle at 6px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 18px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 30px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 42px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 54px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 66px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 78px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 90px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 102px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 114px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 126px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 138px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 150px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 162px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 174px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 186px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 198px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 210px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 222px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 234px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 246px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 258px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 270px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 282px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 294px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 306px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 318px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 330px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 342px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 354px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 366px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 378px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 390px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 402px 0%, var(--paper) 5px, transparent 5px),
-    radial-gradient(circle at 414px 0%, var(--paper) 5px, transparent 5px);
-  background-color: var(--receipt-bg);
-}
-.receipt__header { display: flex; justify-content: space-between; margin-bottom: 0.6rem; }
-.receipt__store { font-weight: bold; font-size: 1rem; letter-spacing: 0.15em; }
-.receipt__date { font-size: 0.78rem; color: color-mix(in srgb, var(--receipt-f) 60%, transparent); }
-.receipt__divider { color: color-mix(in srgb, var(--receipt-f) 40%, transparent); margin: 0.5rem 0; font-size: 0.75rem; overflow: hidden; white-space: nowrap; }
-.receipt__item { margin: 0.6rem 0; }
-.receipt__item-top { display: flex; justify-content: space-between; font-weight: bold; }
-.receipt__item-name { font-size: 0.88rem; }
-.receipt__item-price { font-size: 0.85rem; color: var(--accent); }
-.receipt__item-desc { font-size: 0.78rem; color: color-mix(in srgb, var(--receipt-f) 65%, transparent); line-height: 1.4; margin-top: 0.2rem; }
-.receipt__footer { display: flex; justify-content: space-between; font-weight: bold; font-size: 0.9rem; margin: 0.5rem 0; }
-.receipt__thanks { text-align: center; font-size: 0.8rem; letter-spacing: 0.2em; color: color-mix(in srgb, var(--receipt-f) 55%, transparent); margin: 0.8rem 0 0.5rem; }
-.receipt__barcode { text-align: center; margin-top: 0.5rem; }
-.barcode-lines {
-  display: inline-block; height: 30px; width: 160px;
-  background-image: repeating-linear-gradient(90deg,
-    var(--receipt-f) 0, var(--receipt-f) 2px, transparent 2px, transparent 4px,
-    var(--receipt-f) 4px, var(--receipt-f) 5px, transparent 5px, transparent 8px,
-    var(--receipt-f) 8px, var(--receipt-f) 11px, transparent 11px, transparent 13px,
-    var(--receipt-f) 13px, var(--receipt-f) 14px, transparent 14px, transparent 17px,
-    var(--receipt-f) 17px, var(--receipt-f) 20px, transparent 20px, transparent 22px,
-    var(--receipt-f) 22px, var(--receipt-f) 23px, transparent 23px, transparent 26px,
-    var(--receipt-f) 26px, var(--receipt-f) 29px, transparent 29px, transparent 31px,
-    var(--receipt-f) 31px, var(--receipt-f) 32px, transparent 32px, transparent 35px,
-    var(--receipt-f) 35px, var(--receipt-f) 38px, transparent 38px, transparent 40px);
-  opacity: 0.7;
-}
-.receipt__barcode-num { font-size: 0.65rem; letter-spacing: 0.15em; color: color-mix(in srgb, var(--receipt-f) 50%, transparent); margin-top: 3px; }
-
-/* ── Навыки — цветные стикеры ── */
-.cv__skills { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.6rem; }
-.skill-item {
-  display: inline-block;
-  padding: 0.3rem 0.85rem;
-  font-family: 'Georgia', serif;
-  font-size: 0.9rem;
-  transition: transform 0.25s;
-  animation: float 3s ease-in-out infinite;
-  letter-spacing: 0.02em;
-  border: 1px solid transparent;
-}
-.skill-item:nth-child(1) { background: var(--sticker-y); color: #713f12; transform: rotate(-1.5deg); animation-delay: 0s; }
-.skill-item:nth-child(2) { background: var(--sticker-p); color: #4c1d95; transform: rotate(1deg);   animation-delay: 0.5s; }
-.skill-item:nth-child(3) { background: var(--sticker-b); color: #0c4a6e; transform: rotate(-0.5deg);animation-delay: 1s; }
-.skill-item:nth-child(4) { background: #d1fae5;          color: #064e3b; transform: rotate(2deg);   animation-delay: 1.5s; }
-[data-theme='dark'] .skill-item:nth-child(1) { color: #fef08a; }
-[data-theme='dark'] .skill-item:nth-child(2) { color: #e9d5ff; }
-[data-theme='dark'] .skill-item:nth-child(3) { color: #bae6fd; }
-[data-theme='dark'] .skill-item:nth-child(4) { color: #a7f3d0; background: #064e3b; }
-.skill-item:hover { transform: scale(1.08) rotate(0deg) !important; }
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-3px); }
-}
-
-/* ── Секция факты ── */
-.section-bubble { text-align: center; margin-top: 3rem; }
-.section-bubble h2 { display: inline-block; }
-
-.bubble-wrapper {
-  display: inline-block;
-  position: relative;
-  margin-top: 1.2rem;
-}
-
-.fact-btn {
-  display: block;
-  margin: 0 auto 1.2rem;
-  background: var(--accent);
-  color: var(--paper);
-  border: none;
-  padding: 0.55rem 1.4rem;
-  font-family: 'Georgia', serif;
-  font-size: 0.95rem;
-  letter-spacing: 0.06em;
-  cursor: pointer;
-  transition: all 0.2s;
-  transform: rotate(-1deg);
-}
-.fact-btn:hover { background: var(--ink); transform: rotate(0deg) translateY(-1px); }
-.fact-btn:active { transform: scale(0.97); }
-
-/* Облако из картинки */
-.cloud-bubble {
-  position: relative;
-  display: inline-block;
-  width: 380px;
-  max-width: 100%;
-}
-.cloud-img {
-  width: 100%;
-  display: block;
-}
-.random-fact {
-  position: absolute;
-  top: 42%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 68%;
-  font-family: 'Georgia', serif;
-  font-style: italic;
-  font-size: 1rem;
-  color: #2a3a5a;
-  text-align: center;
-  margin: 0;
-  opacity: 0;
-  transition: opacity 0.35s ease;
-  line-height: 1.5;
-  pointer-events: none;
-}
-.random-fact.show { opacity: 1; }
-
-/* ── Конфетти ── */
-.confetti {
-  position: fixed;
-  pointer-events: none;
-  z-index: 9999;
-  border-radius: 2px;
-  will-change: transform, opacity;
+// ── Тема ──
+const themeToggle = document.getElementById('theme-toggle');
+const html = document.documentElement;
+if (themeToggle) {
+  const saved = localStorage.getItem('theme') || 'light';
+  html.setAttribute('data-theme', saved);
+  themeToggle.addEventListener('click', () => {
+    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
 }
