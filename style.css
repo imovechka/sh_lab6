@@ -14,7 +14,6 @@
   font-weight: normal; font-style: normal; font-display: swap;
 }
 
-/* ── Переменные ── */
 :root {
   --bg:        #f4efe6;
   --fg:        #1a1208;
@@ -23,14 +22,12 @@
   --border:    #c8b89a;
   --paper:     #ede8db;
   --ink:       #2a1f0e;
-  --tape:      rgba(255, 230, 150, 0.55);
   --sticker-y: #fef08a;
   --sticker-p: #e9d5ff;
   --sticker-b: #bae6fd;
   --receipt-bg:#fdfaf4;
   --receipt-f: #1a1208;
-  --bubble-bg: #ffffff;
-  --bubble-bd: #1a1208;
+  --bubble-fg: #1a1208;
 }
 [data-theme='dark'] {
   --bg:        #1a140d;
@@ -40,19 +37,16 @@
   --border:    #4a3920;
   --paper:     #221a10;
   --ink:       #e8dfc8;
-  --tape:      rgba(180, 150, 60, 0.3);
   --sticker-y: #713f12;
   --sticker-p: #4c1d95;
   --sticker-b: #0c4a6e;
   --receipt-bg:#1a150a;
   --receipt-f: #e8dfc8;
-  --bubble-bg: #2a1f0e;
-  --bubble-bd: #e8dfc8;
+  --bubble-fg: #1a1208;
 }
 
 * { box-sizing: border-box; }
 
-/* ── Газетный фон ── */
 body {
   margin: 0;
   font-family: 'Georgia', 'Times New Roman', serif;
@@ -73,7 +67,6 @@ body {
   transition: background 0.3s, color 0.3s;
 }
 
-/* ── Основной контейнер ── */
 .cv {
   max-width: 740px;
   margin: 2rem auto;
@@ -85,6 +78,8 @@ body {
     8px 8px 0 color-mix(in srgb, var(--border) 25%, transparent);
   position: relative;
 }
+
+/* тонкая рамка внутри */
 .cv::before {
   content: '';
   position: absolute;
@@ -93,24 +88,15 @@ body {
   pointer-events: none;
 }
 
-/* ── Шапка ── */
+/* ── Шапка — без псевдоэлементов со звёздочками ── */
 .cv__header {
   position: relative;
   text-align: center;
-  border-bottom: 3px double var(--border);
+  border-bottom: 2px solid var(--border);
   padding-bottom: 1.5rem;
   margin-bottom: 2.5rem;
 }
-.cv__header::before {
-  content: '✦ ── ✦ ── ✦';
-  display: block;
-  font-size: 0.75rem;
-  color: var(--muted);
-  letter-spacing: 0.4em;
-  margin-bottom: 1rem;
-}
 
-/* ── Имя ── */
 .cv__name {
   font-family: 'Harlequinade', cursive;
   font-size: 3.2rem;
@@ -152,6 +138,7 @@ body {
   background: var(--accent);
   margin: 0.6rem auto 0;
 }
+
 .cv__contacts {
   list-style: none;
   padding: 0;
@@ -159,7 +146,12 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 1.2rem;
+  gap: 1rem;
+}
+.cv__contacts li {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
 }
 .custom-font {
   font-family: 'Earwig Factory', cursive;
@@ -170,6 +162,35 @@ body {
   transition: opacity 0.2s;
 }
 .custom-font:hover { opacity: 0.65; }
+
+/* Кнопка копирования */
+.copy-btn {
+  background: transparent;
+  border: 1px dashed var(--border);
+  border-radius: 4px;
+  padding: 0.15rem 0.4rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--muted);
+  transition: all 0.2s;
+  line-height: 1;
+}
+.copy-btn:hover {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border-color: var(--accent);
+  border-style: solid;
+  color: var(--accent);
+}
+.copy-btn.copied {
+  background: #7ab88a;
+  color: #fff;
+  border-color: #7ab88a;
+  border-style: solid;
+  animation: pop 0.25s ease;
+}
+@keyframes pop {
+  50% { transform: scale(1.25); }
+}
 
 .theme-toggle {
   position: absolute;
@@ -185,8 +206,13 @@ body {
 }
 .theme-toggle:hover { background: color-mix(in srgb, var(--border) 35%, transparent); }
 
-/* ── Заголовки ── */
+/* ── Секции ── */
 section { margin-bottom: 2.5rem; }
+
+/* Секции без псевдоэлементов-наклеек */
+.section-about::before,
+.section-receipt::before,
+.section-skills::before { display: none; }
 
 section h2 {
   font-family: 'Bimbo Finetip', cursive;
@@ -209,52 +235,23 @@ section h2::before {
   background: var(--accent);
 }
 
-/* Scatter */
+/* Scatter — буквы чуть шевелятся, текст читаем */
 .scatter-heading .h-letter {
   display: inline-block;
-  transition: transform 0.35s cubic-bezier(0.34, 1.4, 0.64, 1), opacity 0.35s ease;
+  transition: transform 0.3s cubic-bezier(0.34, 1.3, 0.64, 1), opacity 0.3s ease;
 }
 .scatter-heading:hover .h-letter {
   transform: translate(var(--tx), var(--ty)) rotate(var(--tr));
-  opacity: 0.45;
+  opacity: 0.5;
 }
 
-/* ── Секция: Обо мне ── */
-.section-about {
-  position: relative;
-}
-/* скотч-эффект сверху */
-.section-about::before {
-  content: '';
-  position: absolute;
-  top: -14px;
-  left: 50%;
-  transform: translateX(-50%) rotate(-1.5deg);
-  width: 80px; height: 22px;
-  background: var(--tape);
-  border-radius: 2px;
-}
-
-/* ── ЧЕКОВАЯ СЕКЦИЯ ── */
-.section-receipt {
-  position: relative;
-}
-.section-receipt::before {
-  content: '';
-  position: absolute;
-  top: -12px; left: 30px;
-  width: 60px; height: 20px;
-  background: var(--tape);
-  border-radius: 2px;
-  transform: rotate(1deg);
-}
-
+/* ── Чек ── */
 .receipt {
   background: var(--receipt-bg);
   color: var(--receipt-f);
   border: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
   padding: 1.4rem 1.6rem 1rem;
-  font-family: 'Courier New', 'Courier', monospace;
+  font-family: 'Courier New', monospace;
   font-size: 0.85rem;
   max-width: 420px;
   margin: 0 auto;
@@ -262,12 +259,10 @@ section h2::before {
   box-shadow: 2px 2px 0 color-mix(in srgb, var(--border) 50%, transparent);
   position: relative;
 }
-/* Рваный верхний край */
 .receipt::before {
   content: '';
   position: absolute;
-  top: -8px; left: 0; right: 0;
-  height: 8px;
+  top: -8px; left: 0; right: 0; height: 8px;
   background:
     radial-gradient(circle at 6px 100%, var(--paper) 5px, transparent 5px),
     radial-gradient(circle at 18px 100%, var(--paper) 5px, transparent 5px),
@@ -306,12 +301,10 @@ section h2::before {
     radial-gradient(circle at 414px 100%, var(--paper) 5px, transparent 5px);
   background-color: var(--receipt-bg);
 }
-/* Рваный нижний край */
 .receipt::after {
   content: '';
   position: absolute;
-  bottom: -8px; left: 0; right: 0;
-  height: 8px;
+  bottom: -8px; left: 0; right: 0; height: 8px;
   background:
     radial-gradient(circle at 6px 0%, var(--paper) 5px, transparent 5px),
     radial-gradient(circle at 18px 0%, var(--paper) 5px, transparent 5px),
@@ -350,130 +343,50 @@ section h2::before {
     radial-gradient(circle at 414px 0%, var(--paper) 5px, transparent 5px);
   background-color: var(--receipt-bg);
 }
-
-.receipt__header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.6rem;
-}
-.receipt__store {
-  font-weight: bold;
-  font-size: 1rem;
-  letter-spacing: 0.15em;
-}
-.receipt__date {
-  font-size: 0.78rem;
-  color: color-mix(in srgb, var(--receipt-f) 60%, transparent);
-}
-.receipt__divider {
-  color: color-mix(in srgb, var(--receipt-f) 40%, transparent);
-  margin: 0.5rem 0;
-  font-size: 0.75rem;
-  overflow: hidden;
-  white-space: nowrap;
-}
+.receipt__header { display: flex; justify-content: space-between; margin-bottom: 0.6rem; }
+.receipt__store { font-weight: bold; font-size: 1rem; letter-spacing: 0.15em; }
+.receipt__date { font-size: 0.78rem; color: color-mix(in srgb, var(--receipt-f) 60%, transparent); }
+.receipt__divider { color: color-mix(in srgb, var(--receipt-f) 40%, transparent); margin: 0.5rem 0; font-size: 0.75rem; overflow: hidden; white-space: nowrap; }
 .receipt__item { margin: 0.6rem 0; }
-.receipt__item-top {
-  display: flex;
-  justify-content: space-between;
-  font-weight: bold;
-}
+.receipt__item-top { display: flex; justify-content: space-between; font-weight: bold; }
 .receipt__item-name { font-size: 0.88rem; }
-.receipt__item-price {
-  font-size: 0.85rem;
-  color: var(--accent);
-}
-.receipt__item-desc {
-  font-size: 0.78rem;
-  color: color-mix(in srgb, var(--receipt-f) 65%, transparent);
-  line-height: 1.4;
-  margin-top: 0.2rem;
-}
-.receipt__footer {
-  display: flex;
-  justify-content: space-between;
-  font-weight: bold;
-  font-size: 0.9rem;
-  margin: 0.5rem 0;
-}
-.receipt__thanks {
-  text-align: center;
-  font-size: 0.8rem;
-  letter-spacing: 0.2em;
-  color: color-mix(in srgb, var(--receipt-f) 55%, transparent);
-  margin: 0.8rem 0 0.5rem;
-}
+.receipt__item-price { font-size: 0.85rem; color: var(--accent); }
+.receipt__item-desc { font-size: 0.78rem; color: color-mix(in srgb, var(--receipt-f) 65%, transparent); line-height: 1.4; margin-top: 0.2rem; }
+.receipt__footer { display: flex; justify-content: space-between; font-weight: bold; font-size: 0.9rem; margin: 0.5rem 0; }
+.receipt__thanks { text-align: center; font-size: 0.8rem; letter-spacing: 0.2em; color: color-mix(in srgb, var(--receipt-f) 55%, transparent); margin: 0.8rem 0 0.5rem; }
 .receipt__barcode { text-align: center; margin-top: 0.5rem; }
 .barcode-lines {
-  display: inline-block;
-  height: 30px;
-  width: 160px;
-  background-image: repeating-linear-gradient(
-    90deg,
-    var(--receipt-f) 0, var(--receipt-f) 2px,
-    transparent 2px, transparent 4px,
-    var(--receipt-f) 4px, var(--receipt-f) 5px,
-    transparent 5px, transparent 8px,
-    var(--receipt-f) 8px, var(--receipt-f) 11px,
-    transparent 11px, transparent 13px,
-    var(--receipt-f) 13px, var(--receipt-f) 14px,
-    transparent 14px, transparent 17px,
-    var(--receipt-f) 17px, var(--receipt-f) 20px,
-    transparent 20px, transparent 22px,
-    var(--receipt-f) 22px, var(--receipt-f) 23px,
-    transparent 23px, transparent 26px,
-    var(--receipt-f) 26px, var(--receipt-f) 29px,
-    transparent 29px, transparent 31px,
-    var(--receipt-f) 31px, var(--receipt-f) 32px,
-    transparent 32px, transparent 35px,
-    var(--receipt-f) 35px, var(--receipt-f) 38px,
-    transparent 38px, transparent 40px
-  );
+  display: inline-block; height: 30px; width: 160px;
+  background-image: repeating-linear-gradient(90deg,
+    var(--receipt-f) 0, var(--receipt-f) 2px, transparent 2px, transparent 4px,
+    var(--receipt-f) 4px, var(--receipt-f) 5px, transparent 5px, transparent 8px,
+    var(--receipt-f) 8px, var(--receipt-f) 11px, transparent 11px, transparent 13px,
+    var(--receipt-f) 13px, var(--receipt-f) 14px, transparent 14px, transparent 17px,
+    var(--receipt-f) 17px, var(--receipt-f) 20px, transparent 20px, transparent 22px,
+    var(--receipt-f) 22px, var(--receipt-f) 23px, transparent 23px, transparent 26px,
+    var(--receipt-f) 26px, var(--receipt-f) 29px, transparent 29px, transparent 31px,
+    var(--receipt-f) 31px, var(--receipt-f) 32px, transparent 32px, transparent 35px,
+    var(--receipt-f) 35px, var(--receipt-f) 38px, transparent 38px, transparent 40px);
   opacity: 0.7;
 }
-.receipt__barcode-num {
-  font-size: 0.65rem;
-  letter-spacing: 0.15em;
-  color: color-mix(in srgb, var(--receipt-f) 50%, transparent);
-  margin-top: 3px;
-}
+.receipt__barcode-num { font-size: 0.65rem; letter-spacing: 0.15em; color: color-mix(in srgb, var(--receipt-f) 50%, transparent); margin-top: 3px; }
 
-/* ── Навыки — наклейки ── */
-.section-skills {
-  position: relative;
-}
-.section-skills::before {
-  content: '';
-  position: absolute;
-  top: -10px; right: 40px;
-  width: 50px; height: 18px;
-  background: var(--tape);
-  border-radius: 2px;
-  transform: rotate(2deg);
-}
-.cv__skills {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-}
+/* ── Навыки — цветные стикеры ── */
+.cv__skills { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.6rem; }
 .skill-item {
   display: inline-block;
   padding: 0.3rem 0.85rem;
   font-family: 'Georgia', serif;
   font-size: 0.9rem;
-  transition: all 0.25s;
+  transition: transform 0.25s;
   animation: float 3s ease-in-out infinite;
   letter-spacing: 0.02em;
-  transform-origin: center;
   border: 1px solid transparent;
 }
 .skill-item:nth-child(1) { background: var(--sticker-y); color: #713f12; transform: rotate(-1.5deg); animation-delay: 0s; }
-.skill-item:nth-child(2) { background: var(--sticker-p); color: #4c1d95; transform: rotate(1deg); animation-delay: 0.5s; }
-.skill-item:nth-child(3) { background: var(--sticker-b); color: #0c4a6e; transform: rotate(-0.5deg); animation-delay: 1s; }
-.skill-item:nth-child(4) { background: #d1fae5; color: #064e3b; transform: rotate(2deg); animation-delay: 1.5s; }
+.skill-item:nth-child(2) { background: var(--sticker-p); color: #4c1d95; transform: rotate(1deg);   animation-delay: 0.5s; }
+.skill-item:nth-child(3) { background: var(--sticker-b); color: #0c4a6e; transform: rotate(-0.5deg);animation-delay: 1s; }
+.skill-item:nth-child(4) { background: #d1fae5;          color: #064e3b; transform: rotate(2deg);   animation-delay: 1.5s; }
 [data-theme='dark'] .skill-item:nth-child(1) { color: #fef08a; }
 [data-theme='dark'] .skill-item:nth-child(2) { color: #e9d5ff; }
 [data-theme='dark'] .skill-item:nth-child(3) { color: #bae6fd; }
@@ -481,22 +394,22 @@ section h2::before {
 .skill-item:hover { transform: scale(1.08) rotate(0deg) !important; }
 @keyframes float {
   0%, 100% { transform: translateY(0); }
-  50%  { transform: translateY(-3px); }
+  50%       { transform: translateY(-3px); }
 }
 
-/* ── Секция факты — облачко ── */
+/* ── Секция факты ── */
 .section-bubble { text-align: center; margin-top: 3rem; }
 .section-bubble h2 { display: inline-block; }
 
 .bubble-wrapper {
   display: inline-block;
   position: relative;
-  margin-top: 1.5rem;
+  margin-top: 1.2rem;
 }
 
 .fact-btn {
   display: block;
-  margin: 0 auto 1rem;
+  margin: 0 auto 1.2rem;
   background: var(--accent);
   color: var(--paper);
   border: none;
@@ -511,137 +424,46 @@ section h2::before {
 .fact-btn:hover { background: var(--ink); transform: rotate(0deg) translateY(-1px); }
 .fact-btn:active { transform: scale(0.97); }
 
-/* Речевое облачко */
-.speech-bubble {
+/* Облако из картинки */
+.cloud-bubble {
   position: relative;
-  background: var(--bubble-bg);
-  border: 2px solid var(--bubble-bd);
-  border-radius: 22px;
-  padding: 1.1rem 1.5rem;
-  min-width: 280px;
-  max-width: 480px;
-  text-align: left;
+  display: inline-block;
+  min-width: 260px;
+  max-width: 420px;
 }
-/* хвостик облачка снизу */
-.speech-bubble::after {
-  content: '';
-  position: absolute;
-  bottom: -18px;
-  left: 36px;
-  width: 0;
-  height: 0;
-  border-left: 12px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 18px solid var(--bubble-bd);
+.cloud-img {
+  width: 100%;
+  display: block;
+  /* убираем чёрный фон — картинка PNG с прозрачностью */
+  mix-blend-mode: multiply;
 }
-.speech-bubble::before {
-  content: '';
-  position: absolute;
-  bottom: -13px;
-  left: 38px;
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 15px solid var(--bubble-bg);
-  z-index: 1;
+[data-theme='dark'] .cloud-img {
+  mix-blend-mode: screen;
+  filter: invert(1) hue-rotate(180deg);
 }
 .random-fact {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 75%;
   font-family: 'Georgia', serif;
   font-style: italic;
-  font-size: 1rem;
-  color: var(--fg);
+  font-size: 0.95rem;
+  color: var(--bubble-fg);
+  text-align: center;
   margin: 0;
-  min-height: 1.4em;
   opacity: 0;
   transition: opacity 0.35s ease;
+  line-height: 1.45;
 }
 .random-fact.show { opacity: 1; }
 
-/* маленькие кружочки-пузырьки под облачком */
-.bubble-tail {
-  position: relative;
-  height: 40px;
-  margin-top: 0;
-}
-.bubble-tail::before,
-.bubble-tail::after {
-  content: '';
-  position: absolute;
-  border-radius: 50%;
-  background: var(--bubble-bg);
-  border: 2px solid var(--bubble-bd);
-}
-.bubble-tail::before { width: 12px; height: 12px; bottom: 10px; left: 28px; }
-.bubble-tail::after  { width: 7px;  height: 7px;  bottom: 0;    left: 20px; }
-
-/* ── Кнопка копирования email ── */
-.copy-btn {
-  background: var(--accent);
-  color: var(--paper);
-  border: none;
-  border-radius: 4px;
-  padding: 0.3rem 0.6rem;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: all 0.2s;
-  margin-left: 0.3rem;
-}
-.copy-btn:hover { 
-  transform: scale(1.1); 
-}
-.copy-btn.copied {
-  background: #7ab88a;
-  animation: pop 0.3s ease;
-}
-@keyframes pop {
-  50% { transform: scale(1.3); }
-}
-/* ── Конфетти (надёжный вариант через transition) ── */
+/* ── Конфетти ── */
 .confetti {
   position: fixed;
   pointer-events: none;
   z-index: 9999;
-  transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 1.2s ease;
+  border-radius: 2px;
   will-change: transform, opacity;
-}
-
-/* ── Убираем скотч-наклейки с секций ── */
-.section-about::before,
-.section-receipt::before,
-.section-skills::before {
-  display: none;
-}
-
-/* ── Кнопки копирования ── */
-.copy-btn {
-  background: transparent;
-  border: 1px dashed var(--border);
-  border-radius: 4px;
-  padding: 0.15rem 0.45rem;
-  cursor: pointer;
-  font-size: 0.95rem;
-  color: var(--accent);
-  transition: all 0.2s;
-  margin-left: 0.4rem;
-  vertical-align: middle;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-.copy-btn:hover {
-  background: color-mix(in srgb, var(--accent) 15%, transparent);
-  transform: scale(1.1);
-  border-style: solid;
-}
-.copy-btn:active { transform: scale(0.95); }
-.copy-btn.copied {
-  background: #7ab88a;
-  color: #fff;
-  border-color: #7ab88a;
-  border-style: solid;
-  animation: pop 0.25s ease;
-}
-@keyframes pop {
-  50% { transform: scale(1.2); }
 }
