@@ -430,7 +430,7 @@ section h2::before {
 .random-fact {
   position: absolute;
   /* центр облака: чуть выше середины т.к. облако пышнее сверху */
-  top: 38%;
+  top: 54%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 62%;
