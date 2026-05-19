@@ -28,28 +28,26 @@
       <p class="cv__tagline">Студентка-первокурсница, матобесик, 18 годиков</p>
 
       <ul class="cv__contacts">
-  <li>
-    <a href="mailto:sofiashnurenko@gmail.com" class="custom-font">sofiashnurenko@gmail.com</a>
-    <button id="copy-email" class="copy-btn" aria-label="Copy email">📋</button>
-  </li>
-  <li>
-    <a href="https://github.com/imovechka" class="custom-font">github.com/imovechka</a>
-    <button id="copy-github" class="copy-btn" aria-label="Copy GitHub">📋</button>
-  </li>
-</ul>
+        <li>
+          <a href="mailto:sofiashnurenko@gmail.com" class="custom-font">sofiashnurenko@gmail.com</a>
+          <button class="copy-btn" data-copy="sofiashnurenko@gmail.com" aria-label="Скопировать email">📋</button>
+        </li>
+        <li>
+          <a href="https://github.com/imovechka" class="custom-font">github.com/imovechka</a>
+          <button class="copy-btn" data-copy="https://github.com/imovechka" aria-label="Скопировать GitHub">📋</button>
+        </li>
+      </ul>
 
       <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌗</button>
     </header>
 
-    <!-- Обо мне — обычно, без изменений -->
     <section class="section-about">
       <h2 class="scatter-heading">Обо мне</h2>
       <p>Заканчиваю первый курс тихонечко, не спеша, не шиша, четыре карандаша. Играю в судоку и хожу на гиревой спорт.</p>
     </section>
 
-    <!-- Опыт и проекты — как чек -->
     <section class="section-receipt">
-      <h2 class="scatter-heading receipt-title">Опыт и проекты</h2>
+      <h2 class="scatter-heading">Опыт и проекты</h2>
 
       <div class="receipt">
         <div class="receipt__header">
@@ -81,7 +79,7 @@
           <span>ИТОГО ПРОЕКТОВ</span>
           <span>2 шт.</span>
         </div>
-        <div class="receipt__thanks">спасибо за визит ★</div>
+        <div class="receipt__thanks">спасибо за визит</div>
         <div class="receipt__barcode">
           <div class="barcode-lines"></div>
           <div class="receipt__barcode-num">2025-CV-001</div>
@@ -89,7 +87,6 @@
       </div>
     </section>
 
-    <!-- Навыки -->
     <section class="section-skills">
       <h2 class="scatter-heading">Навыки</h2>
       <ul class="cv__skills">
@@ -100,16 +97,15 @@
       </ul>
     </section>
 
-    <!-- Факты — облачко -->
     <section class="section-bubble">
       <h2 class="scatter-heading">Случайный факт обо мне</h2>
 
       <div class="bubble-wrapper">
-        <button id="fact-btn" class="fact-btn">показать факт ✦</button>
-        <div class="speech-bubble" id="bubble" aria-live="polite">
+        <button id="fact-btn" class="fact-btn">показать факт</button>
+        <div class="cloud-bubble">
+          <img src="./cloud.png" class="cloud-img" alt="" aria-hidden="true" />
           <p id="random-fact" class="random-fact">нажми на кнопку...</p>
         </div>
-        <div class="bubble-tail"></div>
       </div>
     </section>
   </main>
