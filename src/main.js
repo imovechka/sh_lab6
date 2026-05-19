@@ -1,5 +1,3 @@
-import '../style.css';
-
 // ── Дата на чеке ──
 const dateEl = document.getElementById('receipt-date');
 if (dateEl) {
@@ -8,15 +6,14 @@ if (dateEl) {
   });
 }
 
-// ── Scatter-анимация заголовков — маленький разброс ──
+// ── Scatter-анимация заголовков ──
 document.querySelectorAll('.scatter-heading').forEach(heading => {
   const text = heading.textContent;
   heading.innerHTML = text.split('').map(char => {
     if (char === ' ') return '&nbsp;';
-    // ±10px X, ±6px Y, ±8deg — текст остаётся читаемым
-    const tx = (Math.random() - 0.5) * 20;
-    const ty = (Math.random() - 0.5) * 12;
-    const tr = (Math.random() - 0.5) * 16;
+    const tx = (Math.random() - 0.5) * 18;
+    const ty = (Math.random() - 0.5) * 10;
+    const tr = (Math.random() - 0.5) * 14;
     return `<span class="h-letter" style="--tx:${tx.toFixed(1)}px;--ty:${ty.toFixed(1)}px;--tr:${tr.toFixed(1)}deg">${char}</span>`;
   }).join('');
 });
@@ -24,64 +21,33 @@ document.querySelectorAll('.scatter-heading').forEach(heading => {
 // ── Конфетти с гравитацией ──
 function createConfetti(originX, originY) {
   const colors = ['#c97a7a','#7aafc9','#7ab88a','#b8b87a','#d46a35','#e9d5ff','#fde68a','#f9a8d4'];
-  const count = 48;
-
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i < 48; i++) {
     const el = document.createElement('div');
     el.className = 'confetti';
-
-    const size   = 5 + Math.random() * 6;
-    const color  = colors[Math.floor(Math.random() * colors.length)];
-    const isCirc = Math.random() > 0.45;
-
-    // начальная позиция — центр кнопки
-    el.style.cssText = `
-      left: ${originX}px;
-      top:  ${originY}px;
-      width:  ${size}px;
-      height: ${size}px;
-      background: ${color};
-      border-radius: ${isCirc ? '50%' : '2px'};
-      opacity: 1;
-    `;
+    const size  = 5 + Math.random() * 6;
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    el.style.cssText = `left:${originX}px;top:${originY}px;width:${size}px;height:${size}px;background:${color};border-radius:${Math.random() > 0.45 ? '50%' : '2px'};opacity:1;`;
     document.body.appendChild(el);
 
-    // физика: случайная начальная скорость во все стороны
-    const angle    = Math.random() * Math.PI * 2;
-    const speed    = 4 + Math.random() * 7;       // px за кадр
-    let   vx       = Math.cos(angle) * speed;
-    let   vy       = Math.sin(angle) * speed;
-    const gravity  = 0.25;
-    const drag     = 0.97;
-    const rotate   = (Math.random() - 0.5) * 12;  // deg за кадр
-    let   deg      = 0;
-    let   x = originX, y = originY;
-    let   opacity  = 1;
-    let   frame    = 0;
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 4 + Math.random() * 7;
+    let vx = Math.cos(angle) * speed;
+    let vy = Math.sin(angle) * speed;
+    let x = originX, y = originY, deg = 0, frame = 0;
+    const rot = (Math.random() - 0.5) * 12;
     const maxFrames = 70;
 
     function tick() {
       frame++;
-      vx  *= drag;
-      vy  *= drag;
-      vy  += gravity;
-      x   += vx;
-      y   += vy;
-      deg += rotate;
-      opacity = Math.max(0, 1 - frame / maxFrames);
-
-      el.style.left    = `${x}px`;
-      el.style.top     = `${y}px`;
+      vx *= 0.97; vy *= 0.97; vy += 0.25;
+      x += vx; y += vy; deg += rot;
+      const opacity = Math.max(0, 1 - frame / maxFrames);
+      el.style.left = `${x}px`;
+      el.style.top  = `${y}px`;
       el.style.opacity = opacity;
       el.style.transform = `rotate(${deg}deg)`;
-
-      if (frame < maxFrames) {
-        requestAnimationFrame(tick);
-      } else {
-        el.remove();
-      }
+      frame < maxFrames ? requestAnimationFrame(tick) : el.remove();
     }
-    // небольшой случайный старт чтобы не все сразу
     setTimeout(() => requestAnimationFrame(tick), Math.random() * 80);
   }
 }
@@ -93,7 +59,12 @@ const facts = [
   'Я хожу на гиревой спорт 💪',
   'У меня есть собачка боксёр Буч (отсылочка) 🐶',
   'Я верю, что тихонечко — это лучшая стратегия 🐢',
-  'Я ненавижу аниме «Магическая битва» 🙅‍♀️'
+  'Я ненавижу аниме «Магическая битва» 🙅‍♀️',
+  'Я умею выживать в дикой природе 🌲',
+  'Собираю открытки со всего мира через посткроссинг 🌍',
+  'Могу решить судоку быстрее, чем выпить чай ☕',
+  'Заканчиваю первый курс с четырьмя карандашами и без шиша 📐',
+  'Моя курсовая готова ровно на 10% — и это прогресс 📊'
 ];
 
 let lastFactIndex = -1;
@@ -105,7 +76,6 @@ if (factBtn && randomFact) {
   randomFact.classList.add('show');
 
   factBtn.addEventListener('click', () => {
-    // конфетти из центра кнопки
     const r = factBtn.getBoundingClientRect();
     createConfetti(r.left + r.width / 2, r.top + r.height / 2);
 
@@ -114,8 +84,8 @@ if (factBtn && randomFact) {
     while (idx === lastFactIndex && facts.length > 1);
     lastFactIndex = idx;
 
-    randomFact.classList.remove('show');
     randomFact.style.opacity = '0';
+    randomFact.classList.remove('show');
     setTimeout(() => {
       randomFact.textContent = facts[idx];
       randomFact.classList.add('show');
@@ -126,18 +96,16 @@ if (factBtn && randomFact) {
   });
 }
 
-// ── Кнопки копирования — единая логика для всех ──
+// ── Кнопки копирования ──
 document.querySelectorAll('.copy-btn[data-copy]').forEach(btn => {
   btn.addEventListener('click', async () => {
     const text = btn.dataset.copy;
     try {
       await navigator.clipboard.writeText(text);
     } catch {
-      // fallback для старых браузеров
       const ta = document.createElement('textarea');
       ta.value = text;
-      ta.style.position = 'fixed';
-      ta.style.opacity = '0';
+      ta.style.cssText = 'position:fixed;opacity:0';
       document.body.appendChild(ta);
       ta.select();
       document.execCommand('copy');
@@ -145,10 +113,7 @@ document.querySelectorAll('.copy-btn[data-copy]').forEach(btn => {
     }
     btn.classList.add('copied');
     btn.textContent = '✓';
-    setTimeout(() => {
-      btn.classList.remove('copied');
-      btn.textContent = '📋';
-    }, 1500);
+    setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '📋'; }, 1500);
   });
 });
 
@@ -156,8 +121,7 @@ document.querySelectorAll('.copy-btn[data-copy]').forEach(btn => {
 const themeToggle = document.getElementById('theme-toggle');
 const html = document.documentElement;
 if (themeToggle) {
-  const saved = localStorage.getItem('theme') || 'light';
-  html.setAttribute('data-theme', saved);
+  html.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
   themeToggle.addEventListener('click', () => {
     const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     html.setAttribute('data-theme', next);
