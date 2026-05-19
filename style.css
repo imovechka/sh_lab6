@@ -428,34 +428,29 @@ section h2::before {
 .cloud-bubble {
   position: relative;
   display: inline-block;
-  min-width: 260px;
-  max-width: 420px;
+  width: 380px;
+  max-width: 100%;
 }
 .cloud-img {
   width: 100%;
   display: block;
-  /* убираем чёрный фон — картинка PNG с прозрачностью */
-  mix-blend-mode: multiply;
-}
-[data-theme='dark'] .cloud-img {
-  mix-blend-mode: screen;
-  filter: invert(1) hue-rotate(180deg);
 }
 .random-fact {
   position: absolute;
-  top: 50%;
+  top: 42%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 75%;
+  width: 68%;
   font-family: 'Georgia', serif;
   font-style: italic;
-  font-size: 0.95rem;
-  color: var(--bubble-fg);
+  font-size: 1rem;
+  color: #2a3a5a;
   text-align: center;
   margin: 0;
   opacity: 0;
   transition: opacity 0.35s ease;
-  line-height: 1.45;
+  line-height: 1.5;
+  pointer-events: none;
 }
 .random-fact.show { opacity: 1; }
 
